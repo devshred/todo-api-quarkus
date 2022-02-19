@@ -17,14 +17,14 @@ docker run --detach --name todo-db --network=todo-app --env MARIADB_DATABASE=tod
 
 ### Dockerized Uber-JAR
 ```shell
-mvn package -DskipTests
+./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t todo-api-quarkus-jvm .
 docker run --network="todo-app" --rm -p 7001:7001 todo-api-quarkus-jvm
 ```
 
 ### Dockerized native app
 ```shell
-./mvnw package -Pnative -DskipTests
+./mvnw clean package -Pnative
 docker build -f src/main/docker/Dockerfile.native -t todo-api-quarkus-native .
 docker run --network="todo-app" --rm -p 7001:7001 todo-api-quarkus-native
 ```
