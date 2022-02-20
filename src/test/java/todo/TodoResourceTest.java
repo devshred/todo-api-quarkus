@@ -51,7 +51,7 @@ public class TodoResourceTest {
             .extract()
             .response();
 
-    List<TodoItem> todoItems = response.jsonPath().getList("$");
-    assertThat(todoItems, hasSize(1));
+    List<TodoEntity> todoEntities = response.jsonPath().getList("$");
+    assertThat(todoEntities, hasSize(1));
   }
 }

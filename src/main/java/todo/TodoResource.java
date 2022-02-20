@@ -1,7 +1,5 @@
 package todo;
 
-import java.util.List;
-import java.util.UUID;
 import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -11,59 +9,61 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.UUID;
 
-@Path("/api")
+@Path("/api/v1/todo")
 public class TodoResource {
-  @GET
-  public List<TodoItem> allAccounts() {
-    return TodoItem.listAll();
-  }
-
-  @POST
-  @Transactional
-  public Response createTodoItem(TodoItem todoItem) {
-    todoItem.id = UUID.randomUUID().toString();
-    todoItem.persist();
-    return Response.status(201).entity(todoItem).build();
-  }
-
-  @GET
-  @Path("/{id}")
-  public TodoItem getTodoItem(@PathParam("id") String id) {
-    TodoItem todoItem = TodoItem.findById(id);
-
-    if (todoItem == null) {
-      throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+    @GET
+    public List<TodoEntity> allTodoItems() {
+        return TodoEntity.listAll();
     }
 
-    return todoItem;
-  }
-
-  @PATCH
-  @Path("/{id}")
-  @Transactional
-  public TodoItem deposit(@PathParam("id") String id, TodoItem patchedObject) {
-    TodoItem dbObject = TodoItem.findById(id);
-
-    if (dbObject == null) {
-      throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+    @POST
+    @Transactional
+    public Response createTodoItem(TodoEntity todoEntity) {
+        todoEntity.id = UUID.randomUUID();
+        todoEntity.persist();
+        return Response.status(201).entity(todoEntity).build();
     }
 
-    dbObject.done = patchedObject.done;
-    return dbObject;
-  }
+    @GET
+    @Path("/{id}")
+    public TodoEntity getTodoItem(@PathParam("id") UUID id) {
+        TodoEntity todoEntity = TodoEntity.findById(id);
 
-  @DELETE
-  @Path("/{id}")
-  @Transactional
-  public Response closeAccount(@PathParam("id") String id) {
-    TodoItem dbObject = TodoItem.findById(id);
+        if (todoEntity == null) {
+            throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+        }
 
-    if (dbObject == null) {
-      throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+        return todoEntity;
     }
 
-    dbObject.delete();
-    return Response.noContent().build();
-  }
+    @PATCH
+    @Path("/{id}")
+    @Transactional
+    public Response changeTodoItem(@PathParam("id") UUID id, TodoEntity patchedObject) {
+        TodoEntity dbObject = TodoEntity.findById(id);
+
+        if (dbObject == null) {
+            throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+        }
+
+        dbObject.done = patchedObject.done;
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deleteTodoItem(@PathParam("id") UUID id) {
+        TodoEntity dbObject = TodoEntity.findById(id);
+
+        if (dbObject == null) {
+            throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);
+        }
+
+        dbObject.delete();
+        return Response.noContent().build();
+    }
 }
