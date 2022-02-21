@@ -1,9 +1,9 @@
 package todo;
 
+import static org.eclipse.microprofile.metrics.MetricUnits.MILLISECONDS;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -13,7 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.metrics.MetricRegistry;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.RegistryType;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 @Path("/api/v1/todo")
 public class TodoResource {
@@ -29,6 +31,11 @@ public class TodoResource {
   }
 
   @POST
+  @Counted(name = "createdItems", description = "How many TodoItems have been created.")
+  @Timed(
+      name = "creationTimer",
+      description = "A measure of how long it takes to create a TodoItem.",
+      unit = MILLISECONDS)
   public Response createTodoItem(TodoEntity todoEntity) {
     registry.counter("create_counter").inc();
     return Response.status(201).entity(service.create(todoEntity)).build();
@@ -58,7 +65,6 @@ public class TodoResource {
 
   @DELETE
   @Path("/{id}")
-  @Transactional
   public Response deleteTodoItem(@PathParam("id") UUID id) {
     if (service.delete(id)) {
       registry.counter("delete_counter").inc();
