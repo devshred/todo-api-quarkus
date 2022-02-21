@@ -9,24 +9,25 @@ It implements an [OpenAPI spec](https://raw.githubusercontent.com/devshred/todo-
 
 ## Packaging and running the application
 
-### prepare MariaDB
+### prepare PostgreSQL
 ```shell script
 docker network create todo-app
 docker run --detach --name todo-db --network=todo-app --env MARIADB_DATABASE=todo-app --env MARIADB_USER=todo-app --env MARIADB_PASSWORD=password --env MARIADB_ROOT_PASSWORD=root-pw  mariadb:10.6
+docker run --detach --name todo-db --network=todo-app --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:14.2
 ```
 
 ### Dockerized Uber-JAR
 ```shell
 ./mvnw clean package
-docker build -f src/main/docker/Dockerfile.jvm -t quay.io/johschmidtcc/todo-api-quarkus:jvm .
-docker run --network="todo-app" --rm -p 8080:8080 quay.io/johschmidtcc/todo-api-quarkus:jvm
+docker build -f src/main/docker/Dockerfile.jvm -t todo-api-quarkus:jvm .
+docker run --network="todo-app" --rm -p 8080:8080 --name todo-api todo-api-quarkus:jvm
 ```
 
 ### Dockerized native app
 ```shell
 ./mvnw clean package -Pnative
 docker build -f src/main/docker/Dockerfile.native -t quay.io/johschmidtcc/todo-api-quarkus:native .
-docker run --network="todo-app" --rm -p 8080:8080 quay.io/johschmidtcc/todo-api-quarkus:native
+docker run --network="todo-app" --rm -p 8080:8080 --name todo-api quay.io/johschmidtcc/todo-api-quarkus:native
 ```
 
 ### Deploy to OpenShift

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class MemoryTodoService implements TodoService {
   private final Map<UUID, TodoEntity> todoStore = new HashMap();
 

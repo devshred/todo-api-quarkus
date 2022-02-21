@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 
-//@ApplicationScoped
+@ApplicationScoped
 public class DbTodoService implements TodoService {
 
   @Override
