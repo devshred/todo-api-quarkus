@@ -1,5 +1,6 @@
 # Todo-API based on Quarkus
 This project uses Quarkus to provide a simple todo-app API and is used for sample deployments in the scope of an [OKD](https://www.okd.io) workshop.
+It implements an [OpenAPI spec](https://raw.githubusercontent.com/devshred/todo-api-spring-kotlin/main/src/main/resources/todo-spec.yaml) and can be tested with a [frontend based on Vue.js](https://github.com/devshred/todo-web).
 
 ## Running the application in dev mode
 ```shell script
@@ -33,11 +34,10 @@ set _quarkus.openshift.namespace_ in application.properties
 ```shell
 oc login
 oc new-project <your-namespace>
-./mvnw clean package -Dquarkus.kubernetes.deploy=true
+./mvnw clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true
 oc get is # show image streams
 oc get pods # show pods
 oc get svc # show kubernetes services
-oc expose svc/todo-api-quarkus # expose the service
 oc get routes # show routes
 curl -s http://<route>/api/v1/todo/ | jq .
 ```
