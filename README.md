@@ -15,6 +15,10 @@ docker network create todo-app
 docker run --detach --name todo-db --network=todo-app -p 5432:5432 --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:13.6
 ```
 
+### Uber-JAR
+./mvnw clean package
+java -Dquarkus.profile=local -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app -jar target/quarkus-app/quarkus-run.jar
+
 ### Dockerized Uber-JAR
 ```shell
 ./mvnw clean package -Dquarkus.profile=local
