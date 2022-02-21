@@ -1,0 +1,15 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: todo-api-quarkus
+spec:
+  source:
+    type: Binary
+  output:
+    to:
+      kind: ImageStreamTag
+      name: todo-api-quarkus:latest
+  strategy:
+    type: Source
+    dockerStrategy:
+      dockerfilePath: src/main/docker/Dockerfile.jvm

@@ -28,8 +28,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(params.namespace) {
-                            openshift.apply(readFile("php/build/imagestream.yaml"))
-                            openshift.apply(readFile("php/build/buildconfig.yaml"))
+                            openshift.apply(readFile("build/imagestream.yaml"))
+                            openshift.apply(readFile("build/buildconfig.yaml"))
                         }
                     }
                 }
