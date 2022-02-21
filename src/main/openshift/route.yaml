@@ -1,0 +1,14 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: todo-api-quarkus
+spec:
+  to:
+    kind: Service
+    name: todo-api-quarkus
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: Edge
+  wildcardPolicy: None

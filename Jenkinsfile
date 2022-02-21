@@ -1,5 +1,5 @@
 parameters {
-    string(name: 'namespace', description: 'Ziel Project zum Deployen')
+    string(name: 'namespace', description: 'Namespace, in welchem das Projekt deployt werden soll.')
 }
 
 pipeline {
@@ -53,6 +53,38 @@ pipeline {
                             def build = bc.startBuild("--from-dir=.", "--wait")
 
                             build.logs('-f')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Prepare deployment") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(params.namespace) {
+                            openshift.apply(readFile("src/main/openshift/deployment.yaml"))
+                            openshift.apply(readFile("src/main/openshift/service.yaml"))
+                            openshift.apply(readFile("src/main/openshift/route.yaml"))
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy application') {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(params.namespace) {
+                            def istag = openshift.selector("imagestreamtag", "todo-api-quarkus:latest")
+                            def imageReference = istag.object().image.dockerImageReference
+
+                            def deployment = openshift.selector("deployment", "todo-api-quarkus").object()
+                            deployment.spec.template.spec.containers[0].image = imageReference
+                            deployment.spec.paused = false
+                            openshift.apply(deployment)
                         }
                     }
                 }

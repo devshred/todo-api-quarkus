@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api-quarkus
+spec:
+  paused: true
+  selector:
+    matchLabels:
+      app: todo-api-quarkus
+  template:
+    metadata:
+      labels:
+        app: todo-api-quarkus
+    spec:
+      containers:
+        - name: main
+          image: todo-api-quarkus
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
