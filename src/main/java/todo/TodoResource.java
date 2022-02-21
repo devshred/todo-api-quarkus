@@ -1,5 +1,6 @@
 package todo;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -17,6 +18,8 @@ import javax.ws.rs.core.Response;
 public class TodoResource {
   @Inject TodoService service;
 
+  @Inject MeterRegistry registry;
+
   @GET
   public List<TodoEntity> allTodoItems() {
     return service.all();
@@ -24,6 +27,7 @@ public class TodoResource {
 
   @POST
   public Response createTodoItem(TodoEntity todoEntity) {
+    registry.counter("create_counter").increment();
     return Response.status(201).entity(service.create(todoEntity)).build();
   }
 
@@ -54,6 +58,7 @@ public class TodoResource {
   @Transactional
   public Response deleteTodoItem(@PathParam("id") UUID id) {
     if (service.delete(id)) {
+      registry.counter("delete_counter").increment();
       return Response.noContent().build();
     } else {
       throw new WebApplicationException("TodoItem with " + id + " does not exist.", 404);

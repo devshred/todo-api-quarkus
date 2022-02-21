@@ -42,3 +42,10 @@ oc expose svc/todo-api-quarkus # expose the service
 oc get routes # show routes
 curl -s http://<route>/api/v1/todo/ | jq .
 ```
+
+#### Add ServiceMonitor and deploy
+```shell
+oc apply -f src/main/openshift/service-monitor.yaml
+mvn clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true -Dquarkus.openshift.labels.app-with-metrics=todo-api -DskipTests
+curl -s http://<route>/q/metrics | grep create_counter_total
+```
