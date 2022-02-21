@@ -10,6 +10,6 @@ spec:
       kind: ImageStreamTag
       name: todo-api-quarkus:latest
   strategy:
-    type: Source
+    type: Docker
     dockerStrategy:
       dockerfilePath: src/main/docker/Dockerfile.jvm
