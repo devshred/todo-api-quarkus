@@ -6,7 +6,7 @@ pipeline {
 
     agent {
         node {
-            label 'php'
+            label 'maven'
         }
     }
 
