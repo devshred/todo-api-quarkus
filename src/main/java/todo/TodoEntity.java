@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.UUID;
 
-@Entity(name = "TODO")
+//@Entity(name = "TODO")
 public class TodoEntity extends PanacheEntityBase {
   @Id public UUID id;
   public String text;
