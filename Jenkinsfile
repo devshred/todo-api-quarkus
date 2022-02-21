@@ -6,7 +6,7 @@ pipeline {
 
     agent {
         node {
-            label 'php'
+            label 'maven'
         }
     }
 
@@ -28,8 +28,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(params.namespace) {
-                            openshift.apply(readFile("php/build/imagestream.yaml"))
-                            openshift.apply(readFile("php/build/buildconfig.yaml"))
+                            openshift.apply(readFile("build/imagestream.yaml"))
+                            openshift.apply(readFile("build/buildconfig.yaml"))
                         }
                     }
                 }
@@ -39,7 +39,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests -Pnative'
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
@@ -49,8 +49,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(params.namespace) {
-                            def bc = openshift.selector("buildconfig", "php-sample-app")
-                            def build = bc.startBuild("--from-dir=php", "--wait")
+                            def bc = openshift.selector("buildconfig", "todo-api-quarkus")
+                            def build = bc.startBuild("--from-dir=.", "--wait")
 
                             build.logs('-f')
                         }
