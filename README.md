@@ -1,6 +1,5 @@
-# todo-api-quarkus Project
-
-This project uses Quarkus to provide a simple todo-app API.
+# Todo-API based on Quarkus
+This project uses Quarkus to provide a simple todo-app API and is used for sample deployments in the scope of an [OKD](https://www.okd.io) workshop.
 
 ## Running the application in dev mode
 ```shell script
@@ -19,14 +18,14 @@ docker run --detach --name todo-db --network=todo-app --env MARIADB_DATABASE=tod
 ```shell
 ./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t quay.io/johschmidtcc/todo-api-quarkus:jvm .
-docker run --network="todo-app" --rm -p 7001:7001 quay.io/johschmidtcc/todo-api-quarkus:jvm
+docker run --network="todo-app" --rm -p 8080:8080 quay.io/johschmidtcc/todo-api-quarkus:jvm
 ```
 
 ### Dockerized native app
 ```shell
 ./mvnw clean package -Pnative
 docker build -f src/main/docker/Dockerfile.native -t quay.io/johschmidtcc/todo-api-quarkus:native .
-docker run --network="todo-app" --rm -p 7001:7001 quay.io/johschmidtcc/todo-api-quarkus:native
+docker run --network="todo-app" --rm -p 8080:8080 quay.io/johschmidtcc/todo-api-quarkus:native
 ```
 
 ### Deploy to OpenShift
