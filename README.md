@@ -12,21 +12,20 @@ It implements an [OpenAPI spec](https://raw.githubusercontent.com/devshred/todo-
 ### prepare PostgreSQL
 ```shell script
 docker network create todo-app
-docker run --detach --name todo-db --network=todo-app --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:13.6
+docker run --detach --name todo-db --network=todo-app -p 5432:5432 --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:13.6
 ```
 
 ### Dockerized Uber-JAR
 ```shell
-./mvnw clean package
+./mvnw clean package -Dquarkus.profile=local
 docker build -f src/main/docker/Dockerfile.jvm -t todo-api-quarkus:jvm .
 docker run --network="todo-app" --rm -p 8080:8080 --name todo-api todo-api-quarkus:jvm
 ```
 
-### Dockerized native app
+### Native app
 ```shell
-./mvnw clean package -Pnative
-docker build -f src/main/docker/Dockerfile.native -t quay.io/johschmidtcc/todo-api-quarkus:native .
-docker run --network="todo-app" --rm -p 8080:8080 --name todo-api quay.io/johschmidtcc/todo-api-quarkus:native
+./mvnw clean package -Dquarkus.profile=local -Pnative
+target/todo-api-quarkus-*-runner -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app
 ```
 
 ### Deploy to OpenShift
