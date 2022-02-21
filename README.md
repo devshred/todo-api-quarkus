@@ -12,8 +12,7 @@ It implements an [OpenAPI spec](https://raw.githubusercontent.com/devshred/todo-
 ### prepare PostgreSQL
 ```shell script
 docker network create todo-app
-docker run --detach --name todo-db --network=todo-app --env MARIADB_DATABASE=todo-app --env MARIADB_USER=todo-app --env MARIADB_PASSWORD=password --env MARIADB_ROOT_PASSWORD=root-pw  mariadb:10.6
-docker run --detach --name todo-db --network=todo-app --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:14.2
+docker run --detach --name todo-db --network=todo-app --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:13.6
 ```
 
 ### Dockerized Uber-JAR
