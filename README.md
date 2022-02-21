@@ -34,7 +34,7 @@ set _quarkus.openshift.namespace_ in application.properties
 ```shell
 oc login
 oc new-project <your-namespace>
-./mvnw clean package -Dquarkus.kubernetes.deploy=true -DskipTests
+./mvnw clean package -Dquarkus.kubernetes.deploy=true
 oc get is # show image streams
 oc get pods # show pods
 oc get svc # show kubernetes services
@@ -46,6 +46,6 @@ curl -s http://<route>/api/v1/todo/ | jq .
 #### Add ServiceMonitor and deploy
 ```shell
 oc apply -f src/main/openshift/service-monitor.yaml
-mvn clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true -Dquarkus.openshift.labels.app-with-metrics=todo-api -DskipTests
+mvn clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true -Dquarkus.openshift.labels.app-with-metrics=todo-api
 curl -s http://<route>/q/metrics | grep create_counter_total
 ```

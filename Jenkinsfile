@@ -39,7 +39,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests'
+                    sh 'mvn clean package'
                 }
             }
         }

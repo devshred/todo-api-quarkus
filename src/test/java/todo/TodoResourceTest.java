@@ -21,10 +21,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TodoResourceTest {
 
+  private static final String API_BASE_PATH = "/api/v1/todo";
+
   @Test
   @Order(1)
   public void firstGetRequest_noEntries() {
-    given().when().get("/api/").then().statusCode(200).body(is("[]"));
+    given().when().get(API_BASE_PATH + "/").then().statusCode(200).body(is("[]"));
   }
 
   @Test
@@ -33,7 +35,7 @@ public class TodoResourceTest {
     given()
         .body("{\"text\": \"some task\"}")
         .contentType(ContentType.JSON)
-        .post("/api/")
+        .post(API_BASE_PATH)
         .then()
         .statusCode(201);
   }
@@ -44,7 +46,7 @@ public class TodoResourceTest {
     Response response =
         given()
             .when()
-            .get("/api/")
+            .get(API_BASE_PATH)
             .then()
             .statusCode(200)
             .body(containsString("some task"))
