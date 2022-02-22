@@ -4,7 +4,6 @@ metadata:
   labels:
     k8s-app: prometheus-app-monitor
   name: prometheus-app-monitor
-  namespace: todo-johannes
 spec:
   endpoints:
     - interval: 30s
@@ -13,4 +12,4 @@ spec:
       scheme: http
   selector:
     matchLabels:
-      app-with-metrics: 'todo-api'
+      app-with-metrics: todo-api-quarkus

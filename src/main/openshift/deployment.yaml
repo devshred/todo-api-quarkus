@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: todo-api-quarkus
 spec:
-  paused: true
   selector:
     matchLabels:
       app: todo-api-quarkus
@@ -13,7 +12,7 @@ spec:
         app: todo-api-quarkus
     spec:
       containers:
-        - name: todo-api
+        - name: todo-api-quarkus
           image: todo-api-quarkus
           imagePullPolicy: Always
           ports:
@@ -24,6 +23,6 @@ spec:
             - name: APP_STAGE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: todo-app
+                  name: todo-api-quarkus
                   key: app.stage-name
       serviceAccountName: todo-api-quarkus

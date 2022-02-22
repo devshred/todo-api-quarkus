@@ -1,13 +1,11 @@
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: todo-api-quarkus-view-secrets
-  namespace: todo-johannes
+  name: todo-api-quarkus-view-database-secrets
 subjects:
   - kind: ServiceAccount
     name: todo-api-quarkus
-    namespace: todo-johannes
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: view-secrets
+  name: view-database-secrets
