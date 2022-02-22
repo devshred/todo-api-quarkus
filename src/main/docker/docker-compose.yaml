@@ -14,9 +14,14 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U todo-app" ]
+      interval: 1s
+      timeout: 1s
+      retries: 20
   todo-api:
     container_name: todo-api
-    image: todo-api-quarkus:jvm
+    image: quay.io/johschmidtcc/todo-api-quarkus:native
     restart: always
     ports:
       - "8080:8080"
@@ -24,7 +29,8 @@ services:
       APP_STAGE_NAME: docker-compose
       QUARKUS_PROFILE: local
     depends_on:
-      - postgres
+      database:
+        condition: service_healthy
   todo-web:
     container_name: todo-web
     image: quay.io/johschmidtcc/todo-web
@@ -35,11 +41,3 @@ services:
       VUE_APP_API_BASE_URL: http://localhost:8080/api/v1/todo/
     depends_on:
       - todo-api
-  adminer:
-    container_name: adminer
-    image: adminer:4.8.1
-    restart: unless-stopped
-    ports:
-      - "9000:8080"
-    depends_on:
-      - postgres
