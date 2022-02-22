@@ -64,6 +64,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(params.namespace) {
+                            openshift.apply(readFile("src/main/openshift/configmap.yaml"))
                             openshift.apply(readFile("src/main/openshift/deployment.yaml"))
                             openshift.apply(readFile("src/main/openshift/service.yaml"))
                             openshift.apply(readFile("src/main/openshift/route.yaml"))
