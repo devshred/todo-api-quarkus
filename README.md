@@ -22,10 +22,16 @@ docker run --network="todo-app" --rm -p 8080:8080 --name todo-api todo-api-quark
 docker compose -f src/main/docker/docker-compose.yaml up
 ```
 
-## Build an run native app
+## Build and run native app
 ```shell
-./mvnw clean package -Dquarkus.profile=local -Pnative
-target/todo-api-quarkus-*-runner -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app
+./mvnw clean package -Pnative
+target/todo-api-quarkus-*-runner -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app -Dquarkus.profile=local
+```
+
+## Build docker image with native app
+```shell
+./mvnw clean package -Pnative -Dquarkus.native.container-build=true
+docker build -f src/main/docker/Dockerfile.native-micro -t todo-api-quarkus:native .
 ```
 
 ## Deploy to OpenShift
