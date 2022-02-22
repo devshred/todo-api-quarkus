@@ -1,0 +1,45 @@
+version: "3.9"
+volumes:
+  postgres_data:
+services:
+  database:
+    container_name: todo-db
+    image: postgres:13.6-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: todo-app
+      POSTGRES_USER: todo-app
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  todo-api:
+    container_name: todo-api
+    image: todo-api-quarkus:jvm
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      APP_STAGE_NAME: docker-compose
+      QUARKUS_PROFILE: local
+    depends_on:
+      - postgres
+  todo-web:
+    container_name: todo-web
+    image: quay.io/johschmidtcc/todo-web
+    restart: always
+    ports:
+      - "8000:80"
+    environment:
+      VUE_APP_API_BASE_URL: http://localhost:8080/api/v1/todo/
+    depends_on:
+      - todo-api
+  adminer:
+    container_name: adminer
+    image: adminer:4.8.1
+    restart: unless-stopped
+    ports:
+      - "9000:8080"
+    depends_on:
+      - postgres

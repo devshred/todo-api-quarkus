@@ -6,33 +6,29 @@ It implements an [OpenAPI spec](https://raw.githubusercontent.com/devshred/todo-
 ```shell script
 ./mvnw compile quarkus:dev
 ```
+_(The app uses an in-memory H2 database.)_
 
 ## Packaging and running the application
 
-### prepare PostgreSQL
-```shell script
-docker network create todo-app
-docker run --detach --name todo-db --network=todo-app -p 5432:5432 --env POSTGRES_DB=todo-app --env POSTGRES_USER=todo-app --env POSTGRES_PASSWORD=password postgres:13.6
-```
-
-### Uber-JAR
-./mvnw clean package
-java -Dquarkus.profile=local -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app -jar target/quarkus-app/quarkus-run.jar
-
-### Dockerized Uber-JAR
+### Dockerize Uber-JAR
 ```shell
-./mvnw clean package -Dquarkus.profile=local
+./mvnw clean package
 docker build -f src/main/docker/Dockerfile.jvm -t todo-api-quarkus:jvm .
 docker run --network="todo-app" --rm -p 8080:8080 --name todo-api todo-api-quarkus:jvm
 ```
 
-### Native app
+### Start frontend, backend and database
+```shell
+docker compose -f src/main/docker/docker-compose.yaml up
+```
+
+## Build an run native app
 ```shell
 ./mvnw clean package -Dquarkus.profile=local -Pnative
 target/todo-api-quarkus-*-runner -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/todo-app
 ```
 
-### Deploy to OpenShift
+## Deploy to OpenShift
 set _quarkus.openshift.namespace_ in application.properties
 ```shell
 oc login
@@ -45,7 +41,7 @@ oc get routes # show routes
 curl -s http://<route>/api/v1/todo/ | jq .
 ```
 
-#### Add ServiceMonitor and deploy
+## Add ServiceMonitor and deploy
 ```shell
 oc apply -f src/main/openshift/service-monitor.yaml
 mvn clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true -Dquarkus.openshift.labels.app-with-metrics=todo-api
