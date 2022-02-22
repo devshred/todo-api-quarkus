@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: todo-api-quarkus
 spec:
+  paused: true
   selector:
     matchLabels:
       app: todo-api-quarkus
