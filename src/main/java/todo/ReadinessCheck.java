@@ -28,16 +28,23 @@ public class ReadinessCheck implements HealthCheck {
 
   @Override
   public HealthCheckResponse call() {
-    logger.info("Readiness check started.");
-    this.metricRegistry.counter("app_liveness_probe").inc();
-    Instant readinessTime = initializationTime.plusSeconds(Integer.parseInt(waitTime));
-    if (Instant.now().isBefore(readinessTime)) {
-      long secondsLeft = Instant.now().until(readinessTime, ChronoUnit.SECONDS);
-      logger.info("App not ready. Please be patient for another " + secondsLeft + " seconds.");
+    metricRegistry.counter("app_readiness_probe").inc();
+    if (isReady()) {
+      return HealthCheckResponse.up("Time-based readiness check.");
+    } else {
       return HealthCheckResponse.down("Time-based readiness check.");
+    }
+  }
+
+  private boolean isReady() {
+    Instant readyTime = initializationTime.plusSeconds(Integer.parseInt(waitTime));
+    if (Instant.now().isBefore(readyTime)) {
+      long secondsLeft = Instant.now().until(readyTime, ChronoUnit.SECONDS);
+      logger.info("App not ready. Please be patient for another " + secondsLeft + " seconds.");
+      return false;
     } else {
       logger.info("App ready.");
-      return HealthCheckResponse.up("Time-based readiness check.");
+      return true;
     }
   }
 }

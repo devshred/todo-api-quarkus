@@ -1,15 +1,13 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  labels:
-    k8s-app: prometheus-app-monitor
-  name: prometheus-app-monitor
+  name: todo-api-quarkus-monitor
 spec:
   endpoints:
     - interval: 30s
-      targetPort: 8080
+      targetPort: http
       path: /q/metrics
       scheme: http
   selector:
     matchLabels:
-      app-with-metrics: todo-api-quarkus
+      app: todo-api-quarkus

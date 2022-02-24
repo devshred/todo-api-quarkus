@@ -4,5 +4,5 @@ metadata:
   name: view-database-secrets
 rules:
   - apiGroups: [""] # "" indicates the core API group
-    resources: ["secrets"]
+    resources: ["secrets", "configmaps"]
     verbs: ["get"]
