@@ -49,7 +49,7 @@ curl -s http://<route>/api/v1/todo/ | jq .
 
 ## Add ServiceMonitor and deploy
 ```shell
-oc apply -f src/main/openshift/service-monitor.yaml
+oc apply -f src/main/openshift/servicemonitor.yaml
 mvn clean package -Dquarkus.kubernetes.deploy=true -Dquarkus.openshift.expose=true -Dquarkus.openshift.labels.app-with-metrics=todo-api
 curl -s http://<route>/q/metrics | grep create_counter_total
 ```
